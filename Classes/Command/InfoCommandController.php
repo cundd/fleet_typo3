@@ -9,6 +9,7 @@
 namespace Cundd\Fleet\Command;
 
 use Cundd\Fleet\Info\ExtensionService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
 class InfoCommandController extends CommandController
@@ -34,19 +35,31 @@ class InfoCommandController extends CommandController
      */
     public function infoCommand($key = '')
     {
-        $this->output(
-            json_encode(
-                [
-                    'packages' => [
-                        'active'   => $this->extensionService->getActivePackages(),
-                        'inactive' => $this->extensionService->getInactivePackages(),
-                        'all'      => $this->extensionService->getAllPackages(),
-                    ],
-                ],
-                JSON_PRETTY_PRINT
-            )
-        );
+        $allInformation = $this->getAllInformation();
+
+        if ($key) {
+            $information = ArrayUtility::getValueByPath($allInformation, $key, '.');
+        } else {
+            $information = $allInformation;
+        }
+
+        $this->output(json_encode($information, JSON_PRETTY_PRINT));
 
         $this->sendAndExit();
     }
+
+    /**
+     * @return array
+     */
+    private function getAllInformation()
+    {
+        return [
+            'packages' => [
+                'active'   => $this->extensionService->getActivePackages(),
+                'inactive' => $this->extensionService->getInactivePackages(),
+                'all'      => $this->extensionService->getAllPackages(),
+            ],
+        ];
+    }
+
 }

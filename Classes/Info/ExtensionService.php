@@ -8,7 +8,6 @@
 
 namespace Cundd\Fleet\Info;
 
-use Closure;
 use TYPO3\CMS\Core\Package\Package;
 
 
@@ -17,6 +16,9 @@ use TYPO3\CMS\Core\Package\Package;
  */
 class ExtensionService
 {
+    const STATE_ACTIVE = 'active';
+    const STATE_INACTIVE = 'inactive';
+
     /**
      * @var \TYPO3\CMS\Core\Package\PackageManager
      */
@@ -35,45 +37,6 @@ class ExtensionService
     /**
      * @return array
      */
-    public function getInformation()
-    {
-        /** @var \TYPO3\CMS\Core\Package\Package $package */
-
-        var_dump(array_keys($this->packageManager->getActivePackages()));
-        var_dump(array_keys($this->packageManager->getAvailablePackages()));
-
-        var_dump(
-            array_diff(
-                array_keys($this->packageManager->getAvailablePackages()),
-                array_keys($this->packageManager->getActivePackages())
-            )
-        );
-
-
-        var_dump(
-            json_encode(
-                (array)$this->packageManager->getActivePackages()['rest']->getPackageMetaData(),
-                JSON_PRETTY_PRINT
-            )
-        );
-        var_dump(
-            json_encode(
-                (array)$this->packageManager->getActivePackages()['frontend']->getPackageMetaData(),
-                JSON_PRETTY_PRINT
-            )
-        );
-        var_dump(
-            json_encode(
-                (array)$this->packageManager->getActivePackages()['info']->getPackageMetaData(),
-                JSON_PRETTY_PRINT
-            )
-        );
-
-    }
-
-    /**
-     * @return array
-     */
     public function getAllPackages()
     {
         return array_map([$this, 'getPackageData'], $this->packageManager->getAvailablePackages());
@@ -84,7 +47,7 @@ class ExtensionService
      */
     public function getActivePackages()
     {
-        return array_map([$this, 'getPackageData'], $this->packageManager->getActivePackages());
+        return array_map([$this, 'getPackageDataStateActive'], $this->packageManager->getActivePackages());
     }
 
     /**
@@ -96,21 +59,47 @@ class ExtensionService
         $activePackages = $this->packageManager->getActivePackages();
         $inactivePackageKeys = array_diff_key($allPackages, $activePackages);
 
-        return array_map([$this, 'getPackageData'], $inactivePackageKeys);
+        return array_map([$this, 'getPackageDataStateInactive'], $inactivePackageKeys);
+    }
+
+    /**
+     *
+     * @param Package $package
+     * @param string  $state Either self::STATE_ACTIVE, self::STATE_INACTIVE, or an empty string
+     * @return array
+     */
+    private function getPackageData(Package $package, $state = '')
+    {
+        $meta = $package->getPackageMetaData();
+        $packageKey = $meta->getPackageKey();
+
+        if (!$state) {
+            $state = $this->packageManager->isPackageActive($packageKey) ? self::STATE_ACTIVE : self::STATE_INACTIVE;
+        }
+
+        return [
+            'key'         => $packageKey,
+            'version'     => $meta->getVersion(),
+            'description' => $meta->getDescription(),
+            'state'       => $state,
+        ];
     }
 
     /**
      * @param Package $package
      * @return array
      */
-    private function getPackageData(Package $package)
+    private function getPackageDataStateActive(Package $package)
     {
-        $meta = $package->getPackageMetaData();
+        return $this->getPackageData($package, self::STATE_ACTIVE);
+    }
 
-        return [
-            'key'         => $meta->getPackageKey(),
-            'version'     => $meta->getVersion(),
-            'description' => $meta->getDescription(),
-        ];
+    /**
+     * @param Package $package
+     * @return array
+     */
+    private function getPackageDataStateInactive(Package $package)
+    {
+        return $this->getPackageData($package, self::STATE_INACTIVE);
     }
 }
