@@ -63,9 +63,11 @@ function init_database {
 function init_typo3 {
 	local baseDir=`pwd`;
 	if [[ ! -x ${TYPO3_PATH_WEB}/bin/phpunit ]]; then
-		cd ${TYPO3_PATH_WEB};
-		composer install;
-		cd ${baseDir};
+		if [[ -f "$TYPO3_PATH_WEB/composer.json" ]]; then
+            cd ${TYPO3_PATH_WEB};
+            composer install;
+            cd ${baseDir};
+        fi
 	fi
 }
 
@@ -88,42 +90,34 @@ function init {
 
 # Run Unit Tests
 function unit_tests {
-    set +e;
     if [[ ! -z ${1+x} ]] && [[ -e "$1" ]]; then
         ${PHP_BINARY} $(get_phpunit_path_for_unit_tests) -c "$PROJECT_HOME/Tests/Unit/phpunit.xml" "$@";
     else
         ${PHP_BINARY} $(get_phpunit_path_for_unit_tests) -c "$PROJECT_HOME/Tests/Unit/phpunit.xml" "$PROJECT_HOME/Tests/Unit" "$@";
     fi
-    set -e;
 }
 
 # Run Manual Tests
 function manual_tests {
-    set +e;
     if [[ ! -z ${1+x} ]] && [[ -e "$1" ]]; then
         ${PHP_BINARY} $(get_phpunit_path_for_unit_tests) -c "$PROJECT_HOME/Tests/Manual/phpunit.xml" "$@";
     else
         ${PHP_BINARY} $(get_phpunit_path_for_unit_tests) -c "$PROJECT_HOME/Tests/Manual/phpunit.xml" "$PROJECT_HOME/Tests/Manual" "$@";
     fi
-    set -e;
 }
 
 # Run Functional Tests
 function functional_tests {
-    set +e;
     if [[ ! -z ${1+x} ]] && [[ -e "$1" ]]; then
         ${PHP_BINARY} $(get_phpunit_path_for_functional_tests) -c "$PROJECT_HOME/Tests/Functional/phpunit.xml" "$@";
     else
         ${PHP_BINARY} $(get_phpunit_path_for_functional_tests) -c "$PROJECT_HOME/Tests/Functional/phpunit.xml" "$PROJECT_HOME/Tests/Functional" "$@";
     fi
-    set -e;
 }
 
 # Run Documentation Tests (using test-flight)
 function documentation_tests {
-    set +e;
     ${PHP_BINARY} vendor/bin/test-flight "$@";
-    set -e;
 }
 
 # Print the help
@@ -216,10 +210,10 @@ function main {
 	export TYPO3_PATH_WEB="$TYPO3_PATH_WEB";
 	export CUNDD_TEST="yes";
 
-    if [[ "$UNIT_TESTS" == "yes" ]]; then
-        print_header "Run Unit Tests (using $(get_phpunit_path_for_unit_tests))";
-        unit_tests "$@";
-    fi
+#    if [[ "$UNIT_TESTS" == "yes" ]]; then
+#        print_header "Run Unit Tests (using $(get_phpunit_path_for_unit_tests))";
+#        unit_tests "$@";
+#    fi
 
     if [[ "$FUNCTIONAL_TESTS" == "yes" ]]; then
         print_header "Run Functional Tests (using $(get_phpunit_path_for_functional_tests))";
@@ -227,16 +221,16 @@ function main {
         functional_tests "$@";
     fi
 
-    if [[ "$MANUAL_TESTS" == "yes" ]]; then
-        print_header "Run Manual Tests (using $(get_phpunit_path_for_unit_tests))";
-        init_database;
-        manual_tests "$@";
-    fi
+#    if [[ "$MANUAL_TESTS" == "yes" ]]; then
+#        print_header "Run Manual Tests (using $(get_phpunit_path_for_unit_tests))";
+#        init_database;
+#        manual_tests "$@";
+#    fi
 
-    if [[ "$DOCUMENTATION_TESTS" == "yes" ]]; then
-        print_header "Run Documentation Tests";
-        documentation_tests "$@";
-    fi
+#    if [[ "$DOCUMENTATION_TESTS" == "yes" ]]; then
+#        print_header "Run Documentation Tests";
+#        documentation_tests "$@";
+#    fi
 }
 
 main $@;
