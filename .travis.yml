@@ -6,14 +6,14 @@ php:
   - nightly
 
 env:
-  - TYPO3=TYPO3_8-0 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
-  - TYPO3=TYPO3_8-1 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
-  - TYPO3=TYPO3_8-2 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
-  - TYPO3=TYPO3_8-3 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
-  - TYPO3=TYPO3_8-4 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
-  - TYPO3=TYPO3_8-5 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
-  - TYPO3=TYPO3_8-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
-  - TYPO3=master REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
+  - TYPO3=TYPO3_8-0 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+  - TYPO3=TYPO3_8-1 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+  - TYPO3=TYPO3_8-2 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+  - TYPO3=TYPO3_8-3 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+  - TYPO3=TYPO3_8-4 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+  - TYPO3=TYPO3_8-5 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+  - TYPO3=TYPO3_8-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+  - TYPO3=master REPO="fleet" CLI_HOME=`pwd` DB=mysql
 
 matrix:
   fast_finish: true
@@ -24,18 +24,18 @@ matrix:
   include:
     # TYPO3 6.2
     - php: 5.6
-      env: TYPO3=TYPO3_6-2 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
+      env: TYPO3=TYPO3_6-2 REPO="fleet" CLI_HOME=`pwd` DB=mysql
     # TYPO3 7.6
     - php: 5.6
-      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
+      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
     - php: 7.0
-      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
+      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
     - php: 7.1
-      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
+      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
     - php: nightly
-      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
+      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
     - php: hhvm
-      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql UNIT_TESTS=yes FUNCTIONAL_TESTS=yes
+      env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
 
 sudo: false
 
