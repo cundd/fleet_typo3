@@ -14,7 +14,7 @@ use TYPO3\CMS\Core\Package\Package;
 /**
  * Service to fetch extension information
  */
-class ExtensionService
+class ExtensionService implements ServiceInterface
 {
     const STATE_ACTIVE = 'active';
     const STATE_INACTIVE = 'inactive';
@@ -32,6 +32,18 @@ class ExtensionService
     public function __construct(\TYPO3\CMS\Core\Package\PackageManager $packageManager)
     {
         $this->packageManager = $packageManager;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getInformation()
+    {
+        return [
+            'active'   => $this->getActivePackages(),
+            'inactive' => $this->getInactivePackages(),
+            'all'      => $this->getAllPackages(),
+        ];
     }
 
     /**

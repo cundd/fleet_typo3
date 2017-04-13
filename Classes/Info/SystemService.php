@@ -10,7 +10,7 @@ namespace Cundd\Fleet\Info;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class SystemService
+class SystemService implements ServiceInterface
 {
     /**
      * @return array

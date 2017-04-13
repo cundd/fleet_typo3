@@ -11,15 +11,12 @@ namespace Cundd\Fleet\Info;
 
 use Cundd\Fleet\Constants;
 
-class FleetService
+class FleetService implements ServiceInterface
 {
-    /**
-     * @return array
-     */
     public function getInformation()
     {
         return [
-            'protocol'  => Constants::PROTOCOL_VERSION,
+            'protocol'         => Constants::PROTOCOL_VERSION,
             'extensionVersion' => Constants::EXTENSION_VERSION,
         ];
     }

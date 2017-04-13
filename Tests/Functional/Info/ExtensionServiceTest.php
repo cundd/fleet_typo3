@@ -30,6 +30,18 @@ class ExtensionServiceTest extends AbstractCase
     /**
      * @test
      */
+    public function getInformationTest()
+    {
+        $information = $this->fixture->getInformation();
+
+        $this->assertInternalType('array', $information['active']);
+        $this->assertInternalType('array', $information['inactive']);
+        $this->assertInternalType('array', $information['all']);
+    }
+
+    /**
+     * @test
+     */
     public function getAllPackagesTest()
     {
         $packages = $this->fixture->getAllPackages();
