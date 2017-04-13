@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Package\PackageManager;
 class ExtensionServiceTest extends AbstractCase
 {
     /**
-     * @var  ExtensionService
+     * @var ExtensionService
      */
     private $fixture;
 
@@ -80,7 +80,7 @@ class ExtensionServiceTest extends AbstractCase
         $this->assertTrue(version_compare($packages[$key]['version'], TYPO3_branch) >= 0);
     }
 
-/**
+    /**
      * @param array  $packages
      * @param string $key
      */
@@ -90,6 +90,4 @@ class ExtensionServiceTest extends AbstractCase
         $this->assertSame('inactive', $packages[$key]['state'], "Package '$key' is not inactive");
         $this->assertTrue(version_compare($packages[$key]['version'], TYPO3_branch) >= 0);
     }
-
-
 }

@@ -9,6 +9,7 @@
 namespace Cundd\Fleet\Command;
 
 use Cundd\Fleet\Info\ExtensionService;
+use Cundd\Fleet\Info\SystemService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 
@@ -20,11 +21,18 @@ class InfoCommandController extends CommandController
     private $extensionService;
 
     /**
-     * @param ExtensionService $extensionService
+     * @var SystemService
      */
-    public function __construct(ExtensionService $extensionService)
+    private $systemService;
+
+    /**
+     * @param ExtensionService $extensionService
+     * @param SystemService    $systemService
+     */
+    public function __construct(ExtensionService $extensionService, SystemService $systemService)
     {
         $this->extensionService = $extensionService;
+        $this->systemService = $systemService;
     }
 
     /**
@@ -54,6 +62,7 @@ class InfoCommandController extends CommandController
     private function getAllInformation()
     {
         return [
+            'system'   => $this->systemService->getInformation(),
             'packages' => [
                 'active'   => $this->extensionService->getActivePackages(),
                 'inactive' => $this->extensionService->getInactivePackages(),
