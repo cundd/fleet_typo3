@@ -30,7 +30,7 @@ class SystemServiceTest extends AbstractCase
     public function getInformationTest()
     {
         $information = $this->fixture->getInformation();
-        $this->assertTYPO3Information($information['typo3']);
+        $this->assertTYPO3Information($information['application']);
         $this->assertPlatformInformation($information['platform']);
     }
 
@@ -57,10 +57,14 @@ class SystemServiceTest extends AbstractCase
      */
     private function assertTYPO3Information(array $information)
     {
-        $this->assertArrayHasKey('applicationContext', $information);
-        $this->assertInternalType('string', $information['applicationContext']);
+        $this->assertSame('TYPO3', $information['type']);
         $this->assertSame(TYPO3_version, $information['version']);
         $this->assertSame(TYPO3_branch, $information['branch']);
+
+        $this->assertArrayHasKey('meta', $information);
+        $this->assertInternalType('array', $information['meta']);
+        $this->assertArrayHasKey('applicationContext', $information['meta']);
+        $this->assertInternalType('string', $information['meta']['applicationContext']);
     }
 
     /**
@@ -69,8 +73,9 @@ class SystemServiceTest extends AbstractCase
     private function assertPlatformInformation(array $information)
     {
         $this->assertInternalType('string', $information['host']);
-        $this->assertSame(PHP_VERSION, $information['php']);
-        $this->assertSame(PHP_SAPI, $information['phpSapi']);
+        $this->assertSame('php', $information['type']);
+        $this->assertSame(PHP_VERSION, $information['version']);
+        $this->assertSame(PHP_SAPI, $information['sapi']);
         $this->assertInternalType('array', $information['os']);
         $this->assertInternalType('string', $information['os']['vendor']);
         $this->assertInternalType('string', $information['os']['version']);

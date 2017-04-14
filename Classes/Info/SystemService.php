@@ -18,8 +18,8 @@ class SystemService implements ServiceInterface
     public function getInformation()
     {
         return [
-            'platform' => $this->getPlatformInformation(),
-            'typo3'    => $this->getTYPO3Information(),
+            'platform'    => $this->getPlatformInformation(),
+            'application' => $this->getTYPO3Information(),
         ];
     }
 
@@ -29,9 +29,12 @@ class SystemService implements ServiceInterface
     public function getTYPO3Information()
     {
         return [
-            'version'            => TYPO3_version,
-            'branch'             => TYPO3_branch,
-            'applicationContext' => (string)GeneralUtility::getApplicationContext(),
+            'type'    => 'TYPO3',
+            'version' => TYPO3_version,
+            'branch'  => TYPO3_branch,
+            'meta'    => [
+                'applicationContext' => (string)GeneralUtility::getApplicationContext(),
+            ],
         ];
     }
 
@@ -42,8 +45,9 @@ class SystemService implements ServiceInterface
     {
 
         return [
-            'php'     => PHP_VERSION,
-            'phpSapi' => PHP_SAPI,
+            'type'    => 'php',
+            'version' => PHP_VERSION,
+            'sapi'    => PHP_SAPI,
             'host'    => php_uname('n'),
             'os'      => [
                 'vendor'  => php_uname('s'),
