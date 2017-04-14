@@ -57,7 +57,7 @@ class SystemServiceTest extends AbstractCase
      */
     private function assertTYPO3Information(array $information)
     {
-        $this->assertSame('TYPO3', $information['type']);
+        $this->assertSame('TYPO3', $information['name']);
         $this->assertSame(TYPO3_version, $information['version']);
         $this->assertSame(TYPO3_branch, $information['branch']);
 
@@ -73,7 +73,7 @@ class SystemServiceTest extends AbstractCase
     private function assertPlatformInformation(array $information)
     {
         $this->assertInternalType('string', $information['host']);
-        $this->assertSame('php', $information['type']);
+        $this->assertSame('php', $information['language']);
         $this->assertSame(PHP_VERSION, $information['version']);
         $this->assertSame(PHP_SAPI, $information['sapi']);
         $this->assertInternalType('array', $information['os']);

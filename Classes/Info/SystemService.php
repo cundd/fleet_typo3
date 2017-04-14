@@ -29,7 +29,7 @@ class SystemService implements ServiceInterface
     public function getTYPO3Information()
     {
         return [
-            'type'    => 'TYPO3',
+            'name'    => 'TYPO3',
             'version' => TYPO3_version,
             'branch'  => TYPO3_branch,
             'meta'    => [
@@ -43,13 +43,12 @@ class SystemService implements ServiceInterface
      */
     public function getPlatformInformation()
     {
-
         return [
-            'type'    => 'php',
-            'version' => PHP_VERSION,
-            'sapi'    => PHP_SAPI,
-            'host'    => php_uname('n'),
-            'os'      => [
+            'language' => 'php',
+            'version'  => PHP_VERSION,
+            'sapi'     => PHP_SAPI,
+            'host'     => php_uname('n'),
+            'os'       => [
                 'vendor'  => php_uname('s'),
                 'version' => php_uname('r'),
                 'machine' => php_uname('m'),
