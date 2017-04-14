@@ -20,7 +20,7 @@ class FleetServiceTest extends AbstractCase
      */
     private $fixture;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->fixture = new FleetService();

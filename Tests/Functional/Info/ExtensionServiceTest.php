@@ -19,7 +19,7 @@ class ExtensionServiceTest extends AbstractCase
      */
     private $fixture;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
         /** @var PackageManager $packageManager */
