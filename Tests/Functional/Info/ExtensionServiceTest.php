@@ -50,8 +50,8 @@ class ExtensionServiceTest extends AbstractCase
         $this->assertActive($packages, 'extbase');
         $this->assertActive($packages, 'install');
 
-        $this->assertInactive($packages, 'recycler');
-        $this->assertInactive($packages, 'workspaces');
+        $this->assertInactiveAllowFailure($packages, 'recycler');
+        $this->assertInactiveAllowFailure($packages, 'workspaces');
     }
 
     /**
@@ -75,8 +75,9 @@ class ExtensionServiceTest extends AbstractCase
     {
         $packages = $this->fixture->getInactivePackages();
 
-        $this->assertInactive($packages, 'recycler');
-        $this->assertInactive($packages, 'workspaces');
+        $this->assertInternalType('array', $packages);
+        $this->assertInactiveAllowFailure($packages, 'recycler');
+        $this->assertInactiveAllowFailure($packages, 'workspaces');
 
         $this->assertArrayNotHasKey('extbase', $packages);
     }
@@ -101,5 +102,16 @@ class ExtensionServiceTest extends AbstractCase
         $this->assertArrayHasKey($key, $packages, "Package '$key' not found in packages array");
         $this->assertSame('inactive', $packages[$key]['state'], "Package '$key' is not inactive");
         $this->assertTrue(version_compare($packages[$key]['version'], TYPO3_branch) >= 0);
+    }
+
+    /**
+     * @param array  $packages
+     * @param string $key
+     */
+    private function assertInactiveAllowFailure(array $packages, $key)
+    {
+        if (isset($packages[$key])) {
+            $this->assertInactive($packages, $key);
+        }
     }
 }

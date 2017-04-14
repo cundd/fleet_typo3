@@ -186,7 +186,7 @@ class Bootstrap
             && class_exists('TYPO3\TestingFramework\Core\Functional\FunctionalTestCase', true)
         ) {
             class_alias(
-                'TYPO3\TestingFramework\Core\Functional\FunctionalTestCase',
+                \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase::class,
                 'TYPO3\CMS\Core\Tests\FunctionalTestCase'
             );
         }
