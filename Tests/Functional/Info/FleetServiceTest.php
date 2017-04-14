@@ -33,6 +33,6 @@ class FleetServiceTest extends AbstractCase
     {
         $information = $this->fixture->getInformation();
         $this->assertSame(Constants::PROTOCOL_VERSION, $information['protocol']);
-        $this->assertSame(Constants::EXTENSION_VERSION, $information['extensionVersion']);
+        $this->assertSame(Constants::PROVIDER_VERSION, $information['providerVersion']);
     }
 }

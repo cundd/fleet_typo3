@@ -16,8 +16,8 @@ class FleetService implements ServiceInterface
     public function getInformation()
     {
         return [
-            'protocol'         => Constants::PROTOCOL_VERSION,
-            'extensionVersion' => Constants::EXTENSION_VERSION,
+            'protocol'        => Constants::PROTOCOL_VERSION,
+            'providerVersion' => Constants::PROVIDER_VERSION,
         ];
     }
 }

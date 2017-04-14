@@ -17,7 +17,7 @@ abstract class Constants
     const PROTOCOL_VERSION = '0.1.0';
 
     /**
-     * Extension version
+     * Provider/extension version
      */
-    const EXTENSION_VERSION = '0.1.0';
+    const PROVIDER_VERSION = '0.1.0';
 }
