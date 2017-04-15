@@ -18,6 +18,7 @@ class FleetService implements ServiceInterface
         return [
             'protocol'        => Constants::PROTOCOL_VERSION,
             'providerVersion' => Constants::PROVIDER_VERSION,
+            'providerName'    => Constants::PROVIDER_NAME,
         ];
     }
 }
