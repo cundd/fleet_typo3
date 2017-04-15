@@ -31,8 +31,8 @@ class SystemService implements ServiceInterface
         return [
             'name'    => 'TYPO3',
             'version' => TYPO3_version,
-            'branch'  => TYPO3_branch,
             'meta'    => [
+                'branch'             => TYPO3_branch,
                 'applicationContext' => (string)GeneralUtility::getApplicationContext(),
             ],
         ];

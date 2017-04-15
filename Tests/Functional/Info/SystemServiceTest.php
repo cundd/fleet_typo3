@@ -59,12 +59,12 @@ class SystemServiceTest extends AbstractCase
     {
         $this->assertSame('TYPO3', $information['name']);
         $this->assertSame(TYPO3_version, $information['version']);
-        $this->assertSame(TYPO3_branch, $information['branch']);
 
         $this->assertArrayHasKey('meta', $information);
         $this->assertInternalType('array', $information['meta']);
         $this->assertArrayHasKey('applicationContext', $information['meta']);
         $this->assertInternalType('string', $information['meta']['applicationContext']);
+        $this->assertSame(TYPO3_branch, $information['meta']['branch']);
     }
 
     /**
