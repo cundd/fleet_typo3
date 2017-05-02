@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'fleet',
-    'description' => 'Command line utility to provide system information for fleet',
+    'description' => 'Command line utility to provide system information for Fleet',
     'category' => 'services',
     'author' => 'Daniel Corn',
     'author_email' => 'info@cundd.net',
