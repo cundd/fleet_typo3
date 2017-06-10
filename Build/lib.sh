@@ -37,6 +37,20 @@ function print_warning() {
     lib::_tput sgr0;
 }
 
+# Print a message about a passed test
+function print_passed() {
+    lib::_tput setaf 2;
+    echo "[PASSED] $@";
+    lib::_tput sgr0;
+}
+
+# Print a message about a failed test
+function print_failed() {
+    >&2 lib::_tput setaf 1;
+    >&2 echo "[FAILED] $@";
+    >&2 lib::_tput sgr0;
+}
+
 # Retrieve the path to the MySQL client
 function get_mysql_client_path {
     if hash mysql 2>/dev/null; then

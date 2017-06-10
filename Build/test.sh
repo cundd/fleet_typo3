@@ -99,10 +99,18 @@ function unit_tests {
 
 # Run Manual Tests
 function manual_tests {
-    if [[ ! -z ${1+x} ]] && [[ -e "$1" ]]; then
-        ${PHP_BINARY} $(get_phpunit_path_for_unit_tests) -c "$PROJECT_HOME/Tests/Manual/phpunit.xml" "$@";
+    local fleet_command="$PROJECT_HOME/Resources/Private/Scripts/fleet.sh";
+    local result;
+    local result_status;
+    set +e;
+    result=$(bash -c "$fleet_command");
+    result_status=$?;
+    set -e;
+    if [ "$result_status" -eq "0" ]; then
+        print_passed;
     else
-        ${PHP_BINARY} $(get_phpunit_path_for_unit_tests) -c "$PROJECT_HOME/Tests/Manual/phpunit.xml" "$PROJECT_HOME/Tests/Manual" "$@";
+        print_failed "Failed with status $result_status" "
+$result";
     fi
 }
 
@@ -221,11 +229,12 @@ function main {
         functional_tests "$@";
     fi
 
-#    if [[ "$MANUAL_TESTS" == "yes" ]]; then
-#        print_header "Run Manual Tests (using $(get_phpunit_path_for_unit_tests))";
-#        init_database;
-#        manual_tests "$@";
-#    fi
+    if [[ "$MANUAL_TESTS" == "yes" ]]; then
+        local fleet_command="$PROJECT_HOME/Resources/Private/Scripts/fleet.sh";
+        print_header "Run the Fleet command $fleet_command";
+        init_database;
+        manual_tests;
+    fi
 
 #    if [[ "$DOCUMENTATION_TESTS" == "yes" ]]; then
 #        print_header "Run Documentation Tests";
