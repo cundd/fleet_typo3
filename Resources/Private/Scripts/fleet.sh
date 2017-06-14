@@ -7,6 +7,14 @@ print_error() {
      >&2 echo "[ERROR] $1";
 }
 
+print_help() {
+    echo "Usage $0 [command]
+
+info:info       Print information for the Fleet master
+selfupdate      Update the extension (if installed via git)
+";
+}
+
 detect_script_dir() {
     if hash realpath 2> /dev/null && [ -z ${BASH+x} ]; then
         cd "$(dirname $(realpath "$0" ))";
@@ -87,11 +95,53 @@ load_env(){
     fi
 }
 
+has_argument() {
+    if [ "$#" -lt "1" ]; then
+        print_error "Missing argument 1 (search)";
+        exit 1;
+    fi
+
+    local search="$1";
+    shift;
+    for var in "$@"; do
+        if [ "$var" == "$search" ]; then
+            return 0;
+        fi
+    done
+    return 1;
+}
+
+selfupdate() {
+    cd $(detect_extension_dir);
+
+    if [ ! -e "Classes/Command/InfoCommandController.php" ]; then
+        print_error "Could not reliably determine the installation dir";
+        exit 4;
+    elif [ ! -e ".git" ]; then
+        print_error "Fleet was not installed through git";
+        exit 5;
+    elif hash git 2> /dev/null; then
+        git pull;
+    else
+        print_error "Command git not available";
+        exit 6;
+    fi
+}
+
 main() {
+    if has_argument "-h" "$@" || has_argument "--help" "$@" || has_argument "help" "$@"; then
+        print_help;
+        exit 0;
+    fi
+
     local command="fleet:info:info";
-    if [ "$#" -gt 0 ];then
+    if [ "$#" -gt 0 ] && [ "$1" == "selfupdate" ]; then
+        selfupdate;
+        exit 0;
+    elif [ "$#" -gt 0 ];then
         command="fleet:$1";
     fi
+
     detect_script_dir > /dev/null;
     load_env;
     prepare_typo3_path_web;
