@@ -1,0 +1,201 @@
+#!/usr/bin/env php
+<?php
+
+class FleetCli
+{
+    /**
+     * @param array $arguments
+     * @return string
+     */
+    public function run(array $arguments)
+    {
+        $command = count($arguments) > 1 ? $arguments[1] : 'info';
+        if ($command === 'help' || in_array('-h', $arguments) || in_array('--help', $arguments)) {
+            return $this->showHelp();
+        }
+        if ($command === 'selfupdate' || $command === 'self-update') {
+            return $this->selfUpdate();
+        }
+
+        return $this->executeExtbaseCommand("fleet:info:$command");
+    }
+
+    /**
+     * @return int
+     */
+    private function showHelp()
+    {
+        $usage = "Usage %s [command]
+
+info        Print information for the Fleet master
+selfupdate  Update the extension (if installed via git)
+help        Show this help
+
+";
+        fwrite(STDOUT, sprintf($usage, __FILE__));
+
+        return 0;
+    }
+
+    /**
+     * @return string
+     */
+    private function selfUpdate()
+    {
+        if (!file_exists(__DIR__ . '/.git')) {
+            $this->printError("Fleet was not installed through git");
+
+            exit(5);
+        }
+
+        $status = $this->executeCommandSilent('git', 'status');
+        if (0 !== $status) {
+            $this->printError("Command git not available");
+
+            return $status;
+        }
+
+        return $this->executeCommandAndOutput('git', 'pull');
+    }
+
+    /**
+     * @param string $command
+     * @return string
+     */
+    private function executeExtbaseCommand($command)
+    {
+        return $this->executeCommandAndOutput(
+            PHP_BINARY,
+            $this->getTypo3PathWeb() . '/typo3/cli_dispatch.phpsh',
+            'extbase',
+            $command
+        );
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    private function getTypo3PathWeb()
+    {
+        $pathWeb = getenv('TYPO3_PATH_WEB');
+        if ($pathWeb) {
+            if (!file_exists($pathWeb)) {
+                $this->printError('Given TYPO3_PATH_WEB "%s" does not exist', $pathWeb);
+
+                exit(2);
+            }
+
+            return (string)$pathWeb;
+        }
+
+        if (file_exists(__DIR__ . '/../TYPO3.CMS')) {
+            $typo3_path_web_dirty = __DIR__ . '/../TYPO3.CMS';
+        } elseif (file_exists(__DIR__ . '/../../../typo3')) {
+            $typo3_path_web_dirty = dirname(__DIR__ . '/../../../typo3');
+        } else {
+            $this->printError('Could not detect TYPO3_PATH_WEB');
+
+            exit(2);
+        }
+
+        return realpath($typo3_path_web_dirty) ?: $typo3_path_web_dirty;
+    }
+
+    /**
+     * @param string   $command
+     * @param string[] $arguments
+     * @return int
+     */
+    private function executeCommandAndOutput($command, ...$arguments)
+    {
+        return $this->executeCommand(
+            function ($line) {
+                fwrite(STDOUT, $line);
+            },
+            function ($line) {
+                fwrite(STDERR, $line);
+            },
+            $command,
+            ...$arguments
+        );
+    }
+
+    /**
+     * @param string   $command
+     * @param string[] $arguments
+     * @return int
+     */
+    private function executeCommandSilent($command, ...$arguments)
+    {
+        return $this->executeCommand(
+            function () {
+            },
+            function () {
+            },
+            $command,
+            ...$arguments
+        );
+    }
+
+    /**
+     * @param callable $receive
+     * @param callable $error
+     * @param string   $command
+     * @param          $cwd
+     * @param string[] $arguments
+     * @return int
+     */
+    private function executeCommand(callable $receive, callable $error, $command, ...$arguments)
+    {
+        $descriptorSpec = [
+            0 => ["pipe", "r"], // STDIN
+            1 => ["pipe", "w"], // STDOUT
+            2 => ["pipe", "w"], // STDERR
+        ];
+
+        $process = proc_open(
+            $command . ' ' . implode(' ', array_map('escapeshellarg', $arguments)),
+            $descriptorSpec,
+            $pipes,
+            __DIR__,
+            $_ENV
+        );
+        if (!is_resource($process)) {
+            $this->printError('Could not open process');
+
+            return 2;
+        }
+
+        while ($line = fread($pipes[1], 1024)) {
+            $receive($line);
+        }
+        while ($line = fread($pipes[2], 1024)) {
+            $error($line);
+        }
+
+        fclose($pipes[0]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        return proc_close($process);
+    }
+
+    /**
+     * @param string $format
+     * @param array  ...$arguments
+     */
+    private function printError($format, ...$arguments)
+    {
+        fwrite(STDERR, vsprintf($format, $arguments));
+    }
+}
+
+if (php_sapi_name() !== 'cli') {
+    echo "CLI required";
+    exit(3);
+}
+
+$cli = new FleetCli();
+$result = $cli->run($argv);
+exit($result);
