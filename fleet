@@ -90,16 +90,16 @@ help        Show this help
         }
 
         if (file_exists(__DIR__ . '/../TYPO3.CMS')) {
-            $typo3_path_web_dirty = __DIR__ . '/../TYPO3.CMS';
+            $pathWeb = __DIR__ . '/../TYPO3.CMS';
         } elseif (file_exists(__DIR__ . '/../../../typo3')) {
-            $typo3_path_web_dirty = dirname(__DIR__ . '/../../../typo3');
+            $pathWeb = dirname(__DIR__ . '/../../../typo3');
         } else {
             $this->printError('Could not detect TYPO3_PATH_WEB');
 
             exit(2);
         }
 
-        return realpath($typo3_path_web_dirty) ?: $typo3_path_web_dirty;
+        return realpath($pathWeb) ?: $pathWeb;
     }
 
     /**
