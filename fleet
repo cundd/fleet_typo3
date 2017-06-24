@@ -9,7 +9,7 @@ class FleetCli
      */
     public function run(array $arguments)
     {
-        $command = count($arguments) > 1 ? $arguments[1] : 'info';
+        $command = count($arguments) > 1 ? $arguments[1] : 'info:info';
         if ($command === 'help' || in_array('-h', $arguments) || in_array('--help', $arguments)) {
             return $this->showHelp();
         }
@@ -17,7 +17,7 @@ class FleetCli
             return $this->selfUpdate();
         }
 
-        return $this->executeExtbaseCommand("fleet:info:$command");
+        return $this->executeExtbaseCommand("fleet:$command");
     }
 
     /**
@@ -142,7 +142,6 @@ help        Show this help
      * @param callable $receive
      * @param callable $error
      * @param string   $command
-     * @param          $cwd
      * @param string[] $arguments
      * @return int
      */
