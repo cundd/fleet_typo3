@@ -230,7 +230,7 @@ function main {
     fi
 
     if [[ "$MANUAL_TESTS" == "yes" ]]; then
-        local fleet_command="$PROJECT_HOME/Resources/Private/Scripts/fleet.sh";
+        local fleet_command="$PROJECT_HOME/fleet";
         print_header "Run the Fleet command $fleet_command";
         init_database;
         manual_tests;
