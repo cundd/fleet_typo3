@@ -5,7 +5,7 @@ class FleetCli
 {
     /**
      * @param array $arguments
-     * @return string
+     * @return int
      */
     public function run(array $arguments)
     {
@@ -60,7 +60,7 @@ help        Show this help
 
     /**
      * @param string $command
-     * @return string
+     * @return int
      */
     private function executeExtbaseCommand($command)
     {
@@ -74,7 +74,6 @@ help        Show this help
 
     /**
      * @return string
-     * @throws Exception
      */
     private function getTypo3PathWeb()
     {
@@ -158,7 +157,7 @@ help        Show this help
             $descriptorSpec,
             $pipes,
             __DIR__,
-            $_ENV
+            $this->collectEnvironmentVariables()
         );
         if (!is_resource($process)) {
             $this->printError('Could not open process');
@@ -178,6 +177,28 @@ help        Show this help
         fclose($pipes[2]);
 
         return proc_close($process);
+    }
+
+    /**
+     * @return array
+     */
+    private function collectEnvironmentVariables()
+    {
+        return array_merge(
+            array_filter(
+                [
+                    'DB_USER'             => getenv('DB_USER'),
+                    'DB_USERNAME'         => getenv('DB_USERNAME'),
+                    'DB_PASSWORD'         => getenv('DB_PASSWORD'),
+                    'DB_HOST'             => getenv('DB_HOST'),
+                    'DB_NAME'             => getenv('DB_NAME'),
+                    'DB_DATABASE'         => getenv('DB_DATABASE'),
+                    'SITE_ENV'            => getenv('SITE_ENV'),
+                    'APPLICATION_CONTEXT' => getenv('APPLICATION_CONTEXT'),
+                ]
+            ),
+            $_ENV
+        );
     }
 
     /**
