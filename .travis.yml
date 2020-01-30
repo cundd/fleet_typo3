@@ -2,6 +2,7 @@ language: php
 php:
   - 7.0
   - 7.1
+  - 7.2
 
 env:
   - TYPO3=TYPO3_8-0 REPO="fleet" CLI_HOME=`pwd` DB=mysql
@@ -37,6 +38,14 @@ matrix:
       env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
     - php: hhvm
       env: TYPO3=TYPO3_7-6 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+
+    # TYPO3 9.5
+    - php: 7.2
+      env: TYPO3=9.5 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+    - php: 7.3
+      env: TYPO3=9.5 REPO="fleet" CLI_HOME=`pwd` DB=mysql
+    - php: hhvm
+      env: TYPO3=9.5 REPO="fleet" CLI_HOME=`pwd` DB=mysql
 
 sudo: false
 
