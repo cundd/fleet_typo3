@@ -49,6 +49,9 @@ matrix:
 
 sudo: false
 
+services:
+  - mysql
+
 ## Cache composer bits
 cache:
   directories:
