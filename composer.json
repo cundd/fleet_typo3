@@ -29,7 +29,6 @@
         }
     },
     "replace": {
-        "fleet": "self.version",
         "typo3-ter/fleet": "self.version"
     },
     "extra": {
