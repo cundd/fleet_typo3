@@ -40,7 +40,7 @@ function install_typo3 {
         lib::pushd ..;
         print_info "Install TYPO3 source";
         if [[ ! -e "TYPO3.CMS" ]]; then
-            git clone --single-branch --branch ${TYPO3} --depth 1 git://git.typo3.org/Packages/TYPO3.CMS.git;
+            git clone --single-branch --branch ${TYPO3} --depth 1 https://git.typo3.org/typo3/typo3.git;
             cd TYPO3.CMS;
         fi
     fi
