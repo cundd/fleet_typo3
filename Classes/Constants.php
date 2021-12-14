@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 13/04/2017
- * Time: 20:43
- */
 
 namespace Cundd\Fleet;
-
 
 abstract class Constants
 {

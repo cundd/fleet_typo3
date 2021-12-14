@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 13/04/2017
- * Time: 13:40
- */
 
 namespace Cundd\Fleet\Info;
 

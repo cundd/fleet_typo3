@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 11/04/2017
- * Time: 21:20
- */
 
 namespace Cundd\Fleet\Command;
 
+use Cundd\Fleet\Info\AllInformationService;
 use Cundd\Fleet\Info\ExtensionService;
 use Cundd\Fleet\Info\FleetService;
 use Cundd\Fleet\Info\SystemService;
@@ -17,18 +12,9 @@ use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 class InfoCommandController extends CommandController
 {
     /**
-     * @var ExtensionService
+     * @var AllInformationService
      */
-    private $extensionService;
-
-    /**
-     * @var SystemService
-     */
-    private $systemService;
-    /**
-     * @var FleetService
-     */
-    private $fleetService;
+    private $allInformationService;
 
     /**
      * @param ExtensionService $extensionService
@@ -40,9 +26,11 @@ class InfoCommandController extends CommandController
         SystemService $systemService,
         FleetService $fleetService
     ) {
-        $this->extensionService = $extensionService;
-        $this->systemService = $systemService;
-        $this->fleetService = $fleetService;
+        $this->allInformationService = new AllInformationService(
+            $extensionService,
+            $systemService,
+            $fleetService
+        );
     }
 
     /**
@@ -53,7 +41,7 @@ class InfoCommandController extends CommandController
      */
     public function infoCommand($key = '')
     {
-        $allInformation = $this->getAllInformation();
+        $allInformation = $this->allInformationService->getInformation();
 
         if ($key) {
             $information = ArrayUtility::getValueByPath($allInformation, $key, '.');
@@ -65,21 +53,4 @@ class InfoCommandController extends CommandController
 
         $this->sendAndExit();
     }
-
-    /**
-     * @return array
-     */
-    private function getAllInformation()
-    {
-        return [
-            'fleet'    => $this->fleetService->getInformation(),
-            'system'   => $this->systemService->getInformation(),
-            'packages' => [
-                'active'   => $this->extensionService->getActivePackages(),
-                'inactive' => $this->extensionService->getInactivePackages(),
-                'all'      => $this->extensionService->getAllPackages(),
-            ],
-        ];
-    }
-
 }

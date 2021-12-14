@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 11/04/2017
- * Time: 21:27
- */
 
 namespace Cundd\Fleet\Info;
 
 use TYPO3\CMS\Core\Package\Package;
-
+use TYPO3\CMS\Core\Package\PackageInterface;
+use TYPO3\CMS\Core\Package\PackageManager;
 
 /**
  * Service to fetch extension information
@@ -20,16 +15,16 @@ class ExtensionService implements ServiceInterface
     const STATE_INACTIVE = 'inactive';
 
     /**
-     * @var \TYPO3\CMS\Core\Package\PackageManager
+     * @var PackageManager
      */
-    private $packageManager = null;
+    private $packageManager;
 
     /**
-     * ExtensionService constructor.
+     * Extension Service constructor
      *
-     * @param \TYPO3\CMS\Core\Package\PackageManager $packageManager
+     * @param PackageManager $packageManager
      */
-    public function __construct(\TYPO3\CMS\Core\Package\PackageManager $packageManager)
+    public function __construct(PackageManager $packageManager)
     {
         $this->packageManager = $packageManager;
     }
@@ -47,35 +42,32 @@ class ExtensionService implements ServiceInterface
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     public function getAllPackages()
     {
-        return array_map([$this, 'getPackageData'], $this->packageManager->getAvailablePackages());
+        return array_map([$this, 'getPackageData'], $this->loadAllAvailablePackages());
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     public function getActivePackages()
     {
-        return array_map([$this, 'getPackageDataStateActive'], $this->packageManager->getActivePackages());
+        return array_map([$this, 'getPackageDataStateActive'], $this->loadActivePackages());
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     public function getInactivePackages()
     {
-        $allPackages = $this->packageManager->getAvailablePackages();
-        $activePackages = $this->packageManager->getActivePackages();
-        $inactivePackageKeys = array_diff_key($allPackages, $activePackages);
+        $inactivePackages = array_diff_key($this->loadAllAvailablePackages(), $this->loadActivePackages());
 
-        return array_map([$this, 'getPackageDataStateInactive'], $inactivePackageKeys);
+        return array_map([$this, 'getPackageDataStateInactive'], $inactivePackages);
     }
 
     /**
-     *
      * @param Package $package
      * @param string  $state Either self::STATE_ACTIVE, self::STATE_INACTIVE, or an empty string
      * @return array
@@ -113,5 +105,21 @@ class ExtensionService implements ServiceInterface
     private function getPackageDataStateInactive(Package $package)
     {
         return $this->getPackageData($package, self::STATE_INACTIVE);
+    }
+
+    /**
+     * @return PackageInterface[]
+     */
+    private function loadAllAvailablePackages()
+    {
+        return $this->packageManager->getAvailablePackages();
+    }
+
+    /**
+     * @return PackageInterface[]
+     */
+    private function loadActivePackages()
+    {
+        return $this->packageManager->getActivePackages();
     }
 }
