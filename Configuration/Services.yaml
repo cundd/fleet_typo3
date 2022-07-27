@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Cundd\Fleet\:
+    resource: '../Classes/*'
+    exclude: '../Classes/{Exception,Configuration/ConfigurationProvider.php}'
+
+  Cundd\Fleet\Command\InfoCommand:
+    tags:
+      - name: 'console.command'
+        command: 'fleet:info:info'
+        description: 'Print information'
