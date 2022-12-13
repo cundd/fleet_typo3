@@ -27,9 +27,10 @@ class SystemService implements ServiceInterface
         $version = new Typo3Version();
 
         return [
-            'name'    => 'TYPO3',
-            'version' => $version->getVersion(),
-            'meta'    => [
+            'name'        => 'TYPO3',
+            'version'     => $version->getVersion(),
+            'installMode' => $this->detectInstallMode(),
+            'meta'        => [
                 'branch'             => $version->getBranch(),
                 'applicationContext' => $applicationContext,
             ],
@@ -53,5 +54,17 @@ class SystemService implements ServiceInterface
                 'info'    => php_uname('v'),
             ],
         ];
+    }
+
+    /**
+     * @return string
+     */
+    private function detectInstallMode(): string
+    {
+        if (Environment::isComposerMode()) {
+            return 'composer';
+        }
+
+        return is_link(Environment::getPublicPath() . '/typo3') ? 'symlink' : 'file';
     }
 }
