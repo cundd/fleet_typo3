@@ -11,15 +11,15 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'fleet',
-    'description' => 'Command line utility to provide system information for Fleet',
-    'category' => 'services',
-    'author' => 'Daniel Corn',
-    'author_email' => 'info@cundd.net',
-    'state' => 'alpha',
-    'internal' => '',
-    'uploadfolder' => '0',
-    'createDirs' => '',
+    'title'            => 'fleet',
+    'description'      => 'Command line utility to provide system information for Fleet',
+    'category'         => 'services',
+    'author'           => 'Daniel Corn',
+    'author_email'     => 'info@cundd.net',
+    'state'            => 'alpha',
+    'internal'         => '',
+    'uploadfolder'     => '0',
+    'createDirs'       => '',
     'clearCacheOnLoad' => 0,
     'version'          => '0.3.0',
     'constraints'      => [
@@ -27,6 +27,6 @@ $EM_CONF[$_EXTKEY] = [
             'typo3' => '9.5.0-11.5.99',
         ],
         'conflicts' => [],
-        'suggests' => [],
+        'suggests'  => [],
     ],
 ];
