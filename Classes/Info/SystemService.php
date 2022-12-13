@@ -3,7 +3,7 @@
 namespace Cundd\Fleet\Info;
 
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Information\Typo3Version;
 
 class SystemService implements ServiceInterface
 {
@@ -23,17 +23,14 @@ class SystemService implements ServiceInterface
      */
     public function getTYPO3Information()
     {
-        if (class_exists('\TYPO3\CMS\Core\Core\Environment')) {
-            $applicationContext = (string)Environment::getContext();
-        } else {
-            $applicationContext = (string)GeneralUtility::getApplicationContext();
-        }
+        $applicationContext = (string)Environment::getContext();
+        $version = new Typo3Version();
 
         return [
             'name'    => 'TYPO3',
-            'version' => TYPO3_version,
+            'version' => $version->getVersion(),
             'meta'    => [
-                'branch'             => TYPO3_branch,
+                'branch'             => $version->getBranch(),
                 'applicationContext' => $applicationContext,
             ],
         ];
