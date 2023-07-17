@@ -1,27 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 13/04/2017
- * Time: 11:20
- */
+
+declare(strict_types=1);
 
 namespace Cundd\Fleet\Tests\Functional\Info;
 
 use Cundd\Fleet\Info\SystemService;
-use Cundd\Fleet\Tests\Functional\AbstractCase;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-class SystemServiceTest extends AbstractCase
+class SystemServiceTest extends FunctionalTestCase
 {
-    /**
-     * @var SystemService
-     */
-    private $fixture;
+    private SystemService $fixture;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->fixture = new SystemService();
+    }
+
+    protected function tearDown(): void
+    {
+        unset($this->fixture);
+        parent::tearDown();
     }
 
     /**
@@ -52,34 +52,28 @@ class SystemServiceTest extends AbstractCase
         $this->assertPlatformInformation($information);
     }
 
-    /**
-     * @param $information
-     */
-    private function assertTYPO3Information(array $information)
+    private function assertTYPO3Information(array $information): void
     {
         $this->assertSame('TYPO3', $information['name']);
-        $this->assertSame(TYPO3_version, $information['version']);
+        $this->assertSame((new Typo3Version())->getVersion(), $information['version']);
 
         $this->assertArrayHasKey('meta', $information);
-        $this->assertInternalType('array', $information['meta']);
+        $this->assertIsArray($information['meta']);
         $this->assertArrayHasKey('applicationContext', $information['meta']);
-        $this->assertInternalType('string', $information['meta']['applicationContext']);
-        $this->assertSame(TYPO3_branch, $information['meta']['branch']);
+        $this->assertIsString($information['meta']['applicationContext']);
+        $this->assertSame((new Typo3Version())->getBranch(), $information['meta']['branch']);
     }
 
-    /**
-     * @param $information
-     */
-    private function assertPlatformInformation(array $information)
+    private function assertPlatformInformation(array $information): void
     {
-        $this->assertInternalType('string', $information['host']);
+        $this->assertIsString($information['host']);
         $this->assertSame('php', $information['language']);
         $this->assertSame(PHP_VERSION, $information['version']);
         $this->assertSame(PHP_SAPI, $information['sapi']);
-        $this->assertInternalType('array', $information['os']);
-        $this->assertInternalType('string', $information['os']['vendor']);
-        $this->assertInternalType('string', $information['os']['version']);
-        $this->assertInternalType('string', $information['os']['machine']);
-        $this->assertInternalType('string', $information['os']['info']);
+        $this->assertIsArray($information['os']);
+        $this->assertIsString($information['os']['vendor']);
+        $this->assertIsString($information['os']['version']);
+        $this->assertIsString($information['os']['machine']);
+        $this->assertIsString($information['os']['info']);
     }
 }

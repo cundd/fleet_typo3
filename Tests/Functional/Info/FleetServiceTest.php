@@ -1,29 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 13/04/2017
- * Time: 11:20
- */
+
+declare(strict_types=1);
 
 namespace Cundd\Fleet\Tests\Functional\Info;
 
 use Cundd\Fleet\Constants;
 use Cundd\Fleet\Info\FleetService;
-use Cundd\Fleet\Info\SystemService;
-use Cundd\Fleet\Tests\Functional\AbstractCase;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-class FleetServiceTest extends AbstractCase
+class FleetServiceTest extends FunctionalTestCase
 {
-    /**
-     * @var SystemService
-     */
-    private $fixture;
+    private FleetService $fixture;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->fixture = new FleetService();
+    }
+
+    protected function tearDown(): void
+    {
+        unset($this->fixture);
+        parent::tearDown();
     }
 
     /**

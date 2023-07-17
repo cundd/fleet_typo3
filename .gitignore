@@ -1,2 +1,11 @@
+/typo3conf
+/typo3temp
+/public
+/uploads
+/config
+/vendor
+/.Build
+/Build/testing-docker/.env
+
+### PhpStorm
 .idea/
-vendor
