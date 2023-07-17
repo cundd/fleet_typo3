@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cundd\Fleet\Info;
 
 use Cundd\Fleet\Constants;
 
 class FleetService implements ServiceInterface
 {
-    public function getInformation()
+    public function getInformation(): array
     {
         return [
             'protocol'        => Constants::PROTOCOL_VERSION,

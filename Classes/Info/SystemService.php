@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cundd\Fleet\Info;
 
 use TYPO3\CMS\Core\Core\Environment;
@@ -7,10 +9,7 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 
 class SystemService implements ServiceInterface
 {
-    /**
-     * @return array
-     */
-    public function getInformation()
+    public function getInformation(): array
     {
         return [
             'platform'    => $this->getPlatformInformation(),
@@ -18,10 +17,7 @@ class SystemService implements ServiceInterface
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getTYPO3Information()
+    public function getTYPO3Information(): array
     {
         $applicationContext = (string)Environment::getContext();
         $version = new Typo3Version();
@@ -37,10 +33,7 @@ class SystemService implements ServiceInterface
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getPlatformInformation()
+    public function getPlatformInformation(): array
     {
         return [
             'language' => 'php',
@@ -56,9 +49,6 @@ class SystemService implements ServiceInterface
         ];
     }
 
-    /**
-     * @return string
-     */
     private function detectInstallMode(): string
     {
         if (Environment::isComposerMode()) {

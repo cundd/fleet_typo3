@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cundd\Fleet\Command;
 
 use Cundd\Fleet\Info\AllInformationService;
@@ -8,23 +10,23 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class InfoCommand extends Command
 {
-    /**
-     * Configure the command by defining the name, options and arguments
-     */
-    protected function configure()
+    public function __construct(private readonly AllInformationService $allInformationService)
+    {
+        parent::__construct();
+    }
+
+    protected function configure(): void
     {
         $this->setDescription('Print information')
             ->addOption('key', 'k', InputOption::VALUE_REQUIRED, 'Type of information to fetch');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $allInformation = $this->getAllInformationService()->getInformation();
+        $allInformation = $this->allInformationService->getInformation();
         $key = $input->getOption('key');
         if ($key) {
             $information = ArrayUtility::getValueByPath($allInformation, $key, '.');
@@ -34,16 +36,6 @@ class InfoCommand extends Command
 
         $output->write(json_encode($information, JSON_PRETTY_PRINT));
 
-        return 0;
-    }
-
-    /**
-     * @return AllInformationService
-     */
-    protected function getAllInformationService()
-    {
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
-        return $objectManager->get(AllInformationService::class);
+        return self::SUCCESS;
     }
 }

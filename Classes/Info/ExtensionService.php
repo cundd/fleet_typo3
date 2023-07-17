@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cundd\Fleet\Info;
 
 use TYPO3\CMS\Core\Package\Package;
@@ -11,28 +13,14 @@ use TYPO3\CMS\Core\Package\PackageManager;
  */
 class ExtensionService implements ServiceInterface
 {
-    const STATE_ACTIVE = 'active';
-    const STATE_INACTIVE = 'inactive';
+    private const STATE_ACTIVE = 'active';
+    private const STATE_INACTIVE = 'inactive';
 
-    /**
-     * @var PackageManager
-     */
-    private $packageManager;
-
-    /**
-     * Extension Service constructor
-     *
-     * @param PackageManager $packageManager
-     */
-    public function __construct(PackageManager $packageManager)
+    public function __construct(private readonly PackageManager $packageManager)
     {
-        $this->packageManager = $packageManager;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getInformation()
+    public function getInformation(): array
     {
         return [
             'active'   => $this->getActivePackages(),
@@ -44,7 +32,7 @@ class ExtensionService implements ServiceInterface
     /**
      * @return array[]
      */
-    public function getAllPackages()
+    public function getAllPackages(): array
     {
         return array_map([$this, 'getPackageData'], $this->loadAllAvailablePackages());
     }
@@ -52,7 +40,7 @@ class ExtensionService implements ServiceInterface
     /**
      * @return array[]
      */
-    public function getActivePackages()
+    public function getActivePackages(): array
     {
         return array_map([$this, 'getPackageDataStateActive'], $this->loadActivePackages());
     }
@@ -60,7 +48,7 @@ class ExtensionService implements ServiceInterface
     /**
      * @return array[]
      */
-    public function getInactivePackages()
+    public function getInactivePackages(): array
     {
         $inactivePackages = array_diff_key($this->loadAllAvailablePackages(), $this->loadActivePackages());
 
@@ -72,7 +60,7 @@ class ExtensionService implements ServiceInterface
      * @param string  $state Either self::STATE_ACTIVE, self::STATE_INACTIVE, or an empty string
      * @return array
      */
-    private function getPackageData(Package $package, $state = '')
+    private function getPackageData(Package $package, string $state = ''): array
     {
         $meta = $package->getPackageMetaData();
         $packageKey = $meta->getPackageKey();
@@ -89,20 +77,12 @@ class ExtensionService implements ServiceInterface
         ];
     }
 
-    /**
-     * @param Package $package
-     * @return array
-     */
-    private function getPackageDataStateActive(Package $package)
+    private function getPackageDataStateActive(Package $package): array
     {
         return $this->getPackageData($package, self::STATE_ACTIVE);
     }
 
-    /**
-     * @param Package $package
-     * @return array
-     */
-    private function getPackageDataStateInactive(Package $package)
+    private function getPackageDataStateInactive(Package $package): array
     {
         return $this->getPackageData($package, self::STATE_INACTIVE);
     }
@@ -110,7 +90,7 @@ class ExtensionService implements ServiceInterface
     /**
      * @return PackageInterface[]
      */
-    private function loadAllAvailablePackages()
+    private function loadAllAvailablePackages(): array
     {
         return $this->packageManager->getAvailablePackages();
     }
@@ -118,7 +98,7 @@ class ExtensionService implements ServiceInterface
     /**
      * @return PackageInterface[]
      */
-    private function loadActivePackages()
+    private function loadActivePackages(): array
     {
         return $this->packageManager->getActivePackages();
     }

@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Cundd\Fleet\Info;
 
 interface ServiceInterface
 {
     /**
-     * Returns a dictionary of information
+     * Return a dictionary of information
      *
      * @return array
      */
-    public function getInformation();
+    public function getInformation(): array;
 }
