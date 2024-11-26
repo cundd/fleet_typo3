@@ -27,7 +27,7 @@ class SystemServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getInformationTest()
+    public function getInformationTest(): void
     {
         $information = $this->fixture->getInformation();
         $this->assertTYPO3Information($information['application']);
@@ -37,7 +37,7 @@ class SystemServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getTYPO3InformationTest()
+    public function getTYPO3InformationTest(): void
     {
         $information = $this->fixture->getTYPO3Information();
         $this->assertTYPO3Information($information);
@@ -46,7 +46,7 @@ class SystemServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getPlatformInformationTest()
+    public function getPlatformInformationTest(): void
     {
         $information = $this->fixture->getPlatformInformation();
         $this->assertPlatformInformation($information);

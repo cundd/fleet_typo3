@@ -31,7 +31,7 @@ class ExtensionServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getInformationTest()
+    public function getInformationTest(): void
     {
         $information = $this->fixture->getInformation();
 
@@ -43,7 +43,7 @@ class ExtensionServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getAllPackagesTest()
+    public function getAllPackagesTest(): void
     {
         $packages = $this->fixture->getAllPackages();
 
@@ -58,7 +58,7 @@ class ExtensionServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getActivePackagesTest()
+    public function getActivePackagesTest(): void
     {
         $packages = $this->fixture->getActivePackages();
 
@@ -72,7 +72,7 @@ class ExtensionServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getInactivePackagesTest()
+    public function getInactivePackagesTest(): void
     {
         $packages = $this->fixture->getInactivePackages();
 

@@ -27,7 +27,7 @@ class FleetServiceTest extends FunctionalTestCase
     /**
      * @test
      */
-    public function getInformationTest()
+    public function getInformationTest(): void
     {
         $information = $this->fixture->getInformation();
         $this->assertSame(Constants::PROTOCOL_VERSION, $information['protocol']);
