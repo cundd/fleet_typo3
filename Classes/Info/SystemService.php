@@ -7,8 +7,17 @@ namespace Cundd\Fleet\Info;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Information\Typo3Version;
 
+/**
+ * @phpstan-type OSInformation array{vendor:string, version:string, machine:string, info:string}
+ * @phpstan-type Typo3Information array{name:string, version:string, installMode:string, meta:array{branch:string, applicationContext:string}}
+ * @phpstan-type Platform array{language:string, version:string, sapi:string, host:string, os:OSInformation}
+ * @phpstan-type SystemInformation array{application:Typo3Information, platform:Platform}
+ */
 class SystemService implements ServiceInterface
 {
+    /**
+     * @return SystemInformation
+     */
     public function getInformation(): array
     {
         return [
@@ -17,9 +26,12 @@ class SystemService implements ServiceInterface
         ];
     }
 
+    /**
+     * @return Typo3Information
+     */
     public function getTYPO3Information(): array
     {
-        $applicationContext = (string)Environment::getContext();
+        $applicationContext = (string) Environment::getContext();
         $version = new Typo3Version();
 
         return [
@@ -33,6 +45,9 @@ class SystemService implements ServiceInterface
         ];
     }
 
+    /**
+     * @return Platform
+     */
     public function getPlatformInformation(): array
     {
         return [

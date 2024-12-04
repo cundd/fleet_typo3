@@ -9,7 +9,7 @@ interface ServiceInterface
     /**
      * Return a dictionary of information
      *
-     * @return array
+     * @return array<string,mixed>
      */
     public function getInformation(): array;
 }

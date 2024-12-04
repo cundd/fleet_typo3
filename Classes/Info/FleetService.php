@@ -6,8 +6,14 @@ namespace Cundd\Fleet\Info;
 
 use Cundd\Fleet\Constants;
 
+/**
+ * @phpstan-type FleetInformation array{protocol:string, providerVersion:string, providerName:string}
+ */
 class FleetService implements ServiceInterface
 {
+    /**
+     * @return FleetInformation
+     */
     public function getInformation(): array
     {
         return [

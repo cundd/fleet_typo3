@@ -10,6 +10,9 @@ use TYPO3\CMS\Core\Package\PackageManager;
 
 /**
  * Service to fetch extension information
+ *
+ * @phpstan-type PackageInformation array{key:string, version:string, description:string, state:'active'|'inactive'}
+ * @phpstan-type PackagesInformation array{active:array<string,PackageInformation>, inactive:array<string,PackageInformation>, all:array<string,PackageInformation>}
  */
 class ExtensionService implements ServiceInterface
 {
@@ -20,6 +23,9 @@ class ExtensionService implements ServiceInterface
     {
     }
 
+    /**
+     * @return PackagesInformation
+     */
     public function getInformation(): array
     {
         return [
@@ -30,7 +36,7 @@ class ExtensionService implements ServiceInterface
     }
 
     /**
-     * @return array[]
+     * @return array<string,PackageInformation>
      */
     public function getAllPackages(): array
     {
@@ -38,7 +44,7 @@ class ExtensionService implements ServiceInterface
     }
 
     /**
-     * @return array[]
+     * @return array<string,PackageInformation>
      */
     public function getActivePackages(): array
     {
@@ -46,7 +52,7 @@ class ExtensionService implements ServiceInterface
     }
 
     /**
-     * @return array[]
+     * @return array<string,PackageInformation>
      */
     public function getInactivePackages(): array
     {
@@ -56,9 +62,9 @@ class ExtensionService implements ServiceInterface
     }
 
     /**
-     * @param Package $package
-     * @param string  $state Either self::STATE_ACTIVE, self::STATE_INACTIVE, or an empty string
-     * @return array
+     * @param string $state Either self::STATE_ACTIVE, self::STATE_INACTIVE, or an empty string
+     *
+     * @return PackageInformation
      */
     private function getPackageData(Package $package, string $state = ''): array
     {
@@ -77,11 +83,17 @@ class ExtensionService implements ServiceInterface
         ];
     }
 
+    /**
+     * @return PackageInformation
+     */
     private function getPackageDataStateActive(Package $package): array
     {
         return $this->getPackageData($package, self::STATE_ACTIVE);
     }
 
+    /**
+     * @return PackageInformation
+     */
     private function getPackageDataStateInactive(Package $package): array
     {
         return $this->getPackageData($package, self::STATE_INACTIVE);

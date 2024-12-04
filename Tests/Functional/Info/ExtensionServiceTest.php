@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * @phpstan-type PackageArray array{key:string,version:string,description:string,state:'active'|'inactive'}
+ * @phpstan-import-type PackageInformation from ExtensionService
  */
 class ExtensionServiceTest extends FunctionalTestCase
 {
@@ -77,7 +77,6 @@ class ExtensionServiceTest extends FunctionalTestCase
     {
         $packages = $this->fixture->getInactivePackages();
 
-        $this->assertIsArray($packages);
         $this->assertInactiveAllowFailure($packages, 'recycler');
         $this->assertInactiveAllowFailure($packages, 'workspaces');
 
@@ -85,7 +84,7 @@ class ExtensionServiceTest extends FunctionalTestCase
     }
 
     /**
-     * @param array<string,PackageArray> $packages
+     * @param array<string,PackageInformation> $packages
      */
     private function assertActive(array $packages, string $key): void
     {
@@ -95,7 +94,7 @@ class ExtensionServiceTest extends FunctionalTestCase
     }
 
     /**
-     * @param array<string,PackageArray> $packages
+     * @param array<string,PackageInformation> $packages
      */
     private function assertInactive(array $packages, string $key): void
     {
@@ -105,8 +104,8 @@ class ExtensionServiceTest extends FunctionalTestCase
     }
 
     /**
-     * @param array<string,PackageArray> $packages
-     * @param string $key
+     * @param array<string,PackageInformation> $packages
+     * @param string                           $key
      */
     private function assertInactiveAllowFailure(array $packages, $key): void
     {

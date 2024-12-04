@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace Cundd\Fleet\Info;
 
+/**
+ * @phpstan-import-type FleetInformation from FleetService
+ * @phpstan-import-type SystemInformation from SystemService
+ * @phpstan-import-type PackagesInformation from ExtensionService
+ */
 class AllInformationService implements ServiceInterface
 {
-    /**
-     * @param ExtensionService $extensionService
-     * @param SystemService    $systemService
-     * @param FleetService     $fleetService
-     */
     public function __construct(
         private readonly ExtensionService $extensionService,
         private readonly SystemService $systemService,
-        private readonly FleetService $fleetService
+        private readonly FleetService $fleetService,
     ) {
     }
 
+    /**
+     * @return array{fleet: FleetInformation, system: SystemInformation, packages:PackagesInformation}
+     */
     public function getInformation(): array
     {
         return [

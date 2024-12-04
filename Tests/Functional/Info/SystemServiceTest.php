@@ -8,6 +8,10 @@ use Cundd\Fleet\Info\SystemService;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
+/**
+ * @phpstan-import-type Typo3Information from SystemService
+ * @phpstan-import-type Platform from SystemService
+ */
 class SystemServiceTest extends FunctionalTestCase
 {
     private SystemService $fixture;
@@ -52,6 +56,9 @@ class SystemServiceTest extends FunctionalTestCase
         $this->assertPlatformInformation($information);
     }
 
+    /**
+     * @param Typo3Information $information
+     */
     private function assertTYPO3Information(array $information): void
     {
         $this->assertSame('TYPO3', $information['name']);
@@ -64,6 +71,9 @@ class SystemServiceTest extends FunctionalTestCase
         $this->assertSame((new Typo3Version())->getBranch(), $information['meta']['branch']);
     }
 
+    /**
+     * @param Platform $information
+     */
     private function assertPlatformInformation(array $information): void
     {
         $this->assertIsString($information['host']);
