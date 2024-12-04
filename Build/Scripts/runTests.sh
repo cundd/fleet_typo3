@@ -67,7 +67,7 @@ Also used by travis-ci for test execution.
 
 Usage: $0 [options] [file]
 
-No arguments: Run all unit tests with PHP 8.1
+No arguments: Run all unit tests with PHP 8.2
 
 Options:
     -s <...>
@@ -96,10 +96,11 @@ Options:
             - postgres: use postgres
             - sqlite: use sqlite (not for -s acceptance)
 
-    -p <8.1|8.2>
+    -p <8.2|8.3|8.4>
         Specifies the PHP minor version to be used
-            - 8.1 (default): use PHP 8.1
-            - 8.2: use PHP 8.2
+            - 8.2 (default): use PHP 8.2
+            - 8.3: use PHP 8.3
+            - 8.4: use PHP 8.4
 
     -e "<phpunit, codeception or additional phpstan scan options>"
         Only with -s acceptance|functional|unit
@@ -135,7 +136,7 @@ Options:
         Show this help.
 
 Examples:
-    # Run unit tests using PHP 8.1
+    # Run unit tests using PHP 8.2
     ./Build/Scripts/runTests.sh
 EOF
 
@@ -162,7 +163,7 @@ else
 fi
 TEST_SUITE="unit"
 DBMS="mariadb"
-PHP_VERSION="8.1"
+PHP_VERSION="8.2"
 PHP_XDEBUG_ON=0
 PHP_XDEBUG_PORT=9003
 EXTRA_TEST_OPTIONS=""
