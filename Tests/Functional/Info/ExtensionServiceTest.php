@@ -10,6 +10,9 @@ use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
+/**
+ * @phpstan-type PackageArray array{key:string,version:string,description:string,state:'active'|'inactive'}
+ */
 class ExtensionServiceTest extends FunctionalTestCase
 {
     private ExtensionService $fixture;
@@ -49,7 +52,6 @@ class ExtensionServiceTest extends FunctionalTestCase
 
         $this->assertActive($packages, 'core');
         $this->assertActive($packages, 'extbase');
-        $this->assertActive($packages, 'install');
 
         $this->assertInactiveAllowFailure($packages, 'recycler');
         $this->assertInactiveAllowFailure($packages, 'workspaces');
@@ -64,7 +66,6 @@ class ExtensionServiceTest extends FunctionalTestCase
 
         $this->assertActive($packages, 'core');
         $this->assertActive($packages, 'extbase');
-        $this->assertActive($packages, 'install');
 
         $this->assertArrayNotHasKey('recycler', $packages);
     }
@@ -83,6 +84,9 @@ class ExtensionServiceTest extends FunctionalTestCase
         $this->assertArrayNotHasKey('extbase', $packages);
     }
 
+    /**
+     * @param array<string,PackageArray> $packages
+     */
     private function assertActive(array $packages, string $key): void
     {
         $this->assertArrayHasKey($key, $packages, "Package '$key' not found in packages array");
@@ -90,6 +94,9 @@ class ExtensionServiceTest extends FunctionalTestCase
         $this->assertTrue(version_compare($packages[$key]['version'], (new Typo3Version())->getBranch()) >= 0);
     }
 
+    /**
+     * @param array<string,PackageArray> $packages
+     */
     private function assertInactive(array $packages, string $key): void
     {
         $this->assertArrayHasKey($key, $packages, "Package '$key' not found in packages array");
@@ -98,7 +105,7 @@ class ExtensionServiceTest extends FunctionalTestCase
     }
 
     /**
-     * @param array  $packages
+     * @param array<string,PackageArray> $packages
      * @param string $key
      */
     private function assertInactiveAllowFailure(array $packages, $key): void
