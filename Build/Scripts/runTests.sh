@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
 #
-# TYPO3 core test runner based on docker and docker-compose.
+# TYPO3 core test runner based on docker compose.
 #
 
 # Function to write a .env file in Build/testing-docker
-# This is read by docker-compose and vars defined here are
+# This is read by docker compose and vars defined here are
 # used in Build/testing-docker/docker-compose.yml
 setUpDockerComposeDotEnv() {
     # Delete possibly existing local .env file if exists
     [ -e .env ] && rm .env
-    # Set up a new .env file for docker-compose
+    # Set up a new .env file for docker compose
     {
         echo "COMPOSE_PROJECT_NAME=local"
         # To prevent access rights of files created by the testing, the docker image later
-        # runs with the same user that is currently executing the script. docker-compose can't
+        # runs with the same user that is currently executing the script. docker compose can't
         # use $UID directly itself since it is a shell variable and not an env variable, so
         # we have to set it explicitly here.
-        echo "HOST_UID=`id -u`"
+        echo "HOST_UID=$(id -u)"
         # Your local user
         echo "ROOT_DIR=${ROOT_DIR}"
         echo "HOST_USER=${USER}"
@@ -33,30 +33,30 @@ setUpDockerComposeDotEnv() {
         echo "IMAGE_PREFIX=${IMAGE_PREFIX}"
 
         echo "CUNDD_TEST=true"
-    } > .env
+    } >.env
 }
 
 # Options -a and -d depend on each other. The function
 # validates input combinations and sets defaults.
 handleDbmsAndDriverOptions() {
     case ${DBMS} in
-        mysql|mariadb)
-            [ -z "${DATABASE_DRIVER}" ] && DATABASE_DRIVER="mysqli"
-            if [ "${DATABASE_DRIVER}" != "mysqli" ] && [ "${DATABASE_DRIVER}" != "pdo_mysql" ]; then
-                echo "Invalid option -a ${DATABASE_DRIVER} with -d ${DBMS}" >&2
-                echo >&2
-                echo "call \".Build/Scripts/runTests.sh -h\" to display help and valid options" >&2
-                exit 1
-            fi
-            ;;
-        postgres|sqlite)
-            if [ -n "${DATABASE_DRIVER}" ]; then
-                echo "Invalid option -a ${DATABASE_DRIVER} with -d ${DBMS}" >&2
-                echo >&2
-                echo "call \".Build/Scripts/runTests.sh -h\" to display help and valid options" >&2
-                exit 1
-            fi
-            ;;
+    mysql | mariadb)
+        [ -z "${DATABASE_DRIVER}" ] && DATABASE_DRIVER="mysqli"
+        if [ "${DATABASE_DRIVER}" != "mysqli" ] && [ "${DATABASE_DRIVER}" != "pdo_mysql" ]; then
+            echo "Invalid option -a ${DATABASE_DRIVER} with -d ${DBMS}" >&2
+            echo >&2
+            echo "call \".Build/Scripts/runTests.sh -h\" to display help and valid options" >&2
+            exit 1
+        fi
+        ;;
+    postgres | sqlite)
+        if [ -n "${DATABASE_DRIVER}" ]; then
+            echo "Invalid option -a ${DATABASE_DRIVER} with -d ${DBMS}" >&2
+            echo >&2
+            echo "call \".Build/Scripts/runTests.sh -h\" to display help and valid options" >&2
+            exit 1
+        fi
+        ;;
     esac
 }
 
@@ -139,26 +139,26 @@ Examples:
     ./Build/Scripts/runTests.sh
 EOF
 
-# Test if docker-compose exists, else exit out with error
-if ! type "docker-compose" > /dev/null; then
-  echo "This script relies on docker and docker-compose. Please install" >&2
-  exit 1
+# Test if docker compose exists, else exit out with error
+if ! type "docker" >/dev/null; then
+    echo "This script relies on docker and docker compose. Please install" >&2
+    exit 1
 fi
 
 # Go to the directory this script is located, so everything else is relative
 # to this dir, no matter from where this script is called.
-THIS_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+THIS_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 cd "$THIS_SCRIPT_DIR" || exit 1
 
 # Go to directory that contains the local docker-compose.yml file
 cd ../testing-docker || exit 1
 
 # Option defaults
-if ! command -v realpath &> /dev/null; then
-  echo "This script works best with realpath installed" >&2
-  ROOT_DIR="${PWD}/../../"
+if ! command -v realpath &>/dev/null; then
+    echo "This script works best with realpath installed" >&2
+    ROOT_DIR="${PWD}/../../"
 else
-  ROOT_DIR=`realpath ${PWD}/../../`
+    ROOT_DIR=$(realpath ${PWD}/../../)
 fi
 TEST_SUITE="unit"
 DBMS="mariadb"
@@ -185,50 +185,50 @@ fi
 # Reset in case getopts has been used previously in the shell
 OPTIND=1
 # Array for invalid options
-INVALID_OPTIONS=();
+INVALID_OPTIONS=()
 # Simple option parsing based on getopts (! not getopt)
 while getopts ":s:a:d:p:e:xy:nhuv" OPT; do
     case ${OPT} in
-        s)
-            TEST_SUITE=${OPTARG}
-            ;;
-        a)
-            DATABASE_DRIVER=${OPTARG}
-            ;;
-        d)
-            DBMS=${OPTARG}
-            ;;
-        p)
-            PHP_VERSION=${OPTARG}
-            ;;
-        e)
-            EXTRA_TEST_OPTIONS=${OPTARG}
-            ;;
-        x)
-            PHP_XDEBUG_ON=1
-            ;;
-        y)
-            PHP_XDEBUG_PORT=${OPTARG}
-            ;;
-        h)
-            echo "${HELP}"
-            exit 0
-            ;;
-        n)
-            CGLCHECK_DRY_RUN="-n"
-            ;;
-        u)
-            TEST_SUITE=update
-            ;;
-        v)
-            SCRIPT_VERBOSE=1
-            ;;
-        \?)
-            INVALID_OPTIONS+=(${OPTARG})
-            ;;
-        :)
-            INVALID_OPTIONS+=(${OPTARG})
-            ;;
+    s)
+        TEST_SUITE=${OPTARG}
+        ;;
+    a)
+        DATABASE_DRIVER=${OPTARG}
+        ;;
+    d)
+        DBMS=${OPTARG}
+        ;;
+    p)
+        PHP_VERSION=${OPTARG}
+        ;;
+    e)
+        EXTRA_TEST_OPTIONS=${OPTARG}
+        ;;
+    x)
+        PHP_XDEBUG_ON=1
+        ;;
+    y)
+        PHP_XDEBUG_PORT=${OPTARG}
+        ;;
+    h)
+        echo "${HELP}"
+        exit 0
+        ;;
+    n)
+        CGLCHECK_DRY_RUN="-n"
+        ;;
+    u)
+        TEST_SUITE=update
+        ;;
+    v)
+        SCRIPT_VERBOSE=1
+        ;;
+    \?)
+        INVALID_OPTIONS+=(${OPTARG})
+        ;;
+    :)
+        INVALID_OPTIONS+=(${OPTARG})
+        ;;
     esac
 done
 
@@ -244,7 +244,7 @@ if [ ${#INVALID_OPTIONS[@]} -ne 0 ]; then
 fi
 
 # Move "7.4" to "php74", the latter is the docker container name
-DOCKER_PHP_IMAGE=`echo "php${PHP_VERSION}" | sed -e 's/\.//'`
+DOCKER_PHP_IMAGE=$(echo "php${PHP_VERSION}" | sed -e 's/\.//')
 
 # Set $1 to first mass argument, this is the optional test file or test directory to execute
 shift $((OPTIND - 1))
@@ -256,78 +256,81 @@ fi
 
 # Suite execution
 case ${TEST_SUITE} in
-    clean)
-        echo -n "Clean builds ... " ; rm -rf \
+clean)
+    echo -n "Clean builds ... "
+    rm -rf \
         ../../Build/testing-docker/.env \
         ../../composer.lock \
         ../../.Build \
-        ../../Tests/Acceptance/Support/_generated/;
-        echo "done"
-        ;;
-    composerUpdate)
-        setUpDockerComposeDotEnv
-        docker-compose run composer_update
+        ../../Tests/Acceptance/Support/_generated/
+    echo "done"
+    ;;
+composerUpdate)
+    setUpDockerComposeDotEnv
+    docker compose run composer_update
+    SUITE_EXIT_CODE=$?
+    docker compose down
+    ;;
+composerValidate)
+    setUpDockerComposeDotEnv
+    docker compose run composer_validate
+    SUITE_EXIT_CODE=$?
+    docker compose down
+    ;;
+functional)
+    handleDbmsAndDriverOptions
+    setUpDockerComposeDotEnv
+    case ${DBMS} in
+    mariadb)
+        echo "Using driver: ${DATABASE_DRIVER}"
+        docker compose run functional_mariadb10
         SUITE_EXIT_CODE=$?
-        docker-compose down
         ;;
-    composerValidate)
-        setUpDockerComposeDotEnv
-        docker-compose run composer_validate
+    mysql)
+        echo "Using driver: ${DATABASE_DRIVER}"
+        docker compose run functional_mysql80
         SUITE_EXIT_CODE=$?
-        docker-compose down
         ;;
-    functional)
-        handleDbmsAndDriverOptions
-        setUpDockerComposeDotEnv
-        case ${DBMS} in
-            mariadb)
-                echo "Using driver: ${DATABASE_DRIVER}"
-                docker-compose run functional_mariadb10
-                SUITE_EXIT_CODE=$?
-                ;;
-            mysql)
-                echo "Using driver: ${DATABASE_DRIVER}"
-                docker-compose run functional_mysql80
-                SUITE_EXIT_CODE=$?
-                ;;
-            postgres)
-                docker-compose run functional_postgres10
-                SUITE_EXIT_CODE=$?
-                ;;
-            sqlite)
-                # sqlite has a tmpfs as .Build/Web/typo3temp/var/tests/functional-sqlite-dbs/
-                # Since docker is executed as root (yay!), the path to this dir is owned by
-                # root if docker creates it. Thank you, docker. We create the path beforehand
-                # to avoid permission issues.
-                mkdir -p ${ROOT_DIR}/.Build/Web/typo3temp/var/tests/functional-sqlite-dbs/
-                docker-compose run functional_sqlite
-                SUITE_EXIT_CODE=$?
-                ;;
-            *)
-                echo "Invalid -d option argument ${DBMS}" >&2
-                echo >&2
-                echo "${HELP}" >&2
-                exit 1
-        esac
-        docker-compose down
-        ;;
-    lint)
-        setUpDockerComposeDotEnv
-        docker-compose run lint
+    postgres)
+        docker compose run functional_postgres10
         SUITE_EXIT_CODE=$?
-        docker-compose down
         ;;
-    update)
-        # pull typo3/core-testing-*:latest versions of those ones that exist locally
-        docker images ${IMAGE_PREFIX}core-testing-*:latest --format "{{.Repository}}:latest" | xargs -I {} docker pull {}
-        # remove "dangling" typo3/core-testing-* images (those tagged as <none>)
-        docker images ${IMAGE_PREFIX}core-testing-* --filter "dangling=true" --format "{{.ID}}" | xargs -I {} docker rmi {}
+    sqlite)
+        # sqlite has a tmpfs as .Build/Web/typo3temp/var/tests/functional-sqlite-dbs/
+        # Since docker is executed as root (yay!), the path to this dir is owned by
+        # root if docker creates it. Thank you, docker. We create the path beforehand
+        # to avoid permission issues.
+        mkdir -p ${ROOT_DIR}/.Build/Web/typo3temp/var/tests/functional-sqlite-dbs/
+        docker compose run functional_sqlite
+        SUITE_EXIT_CODE=$?
         ;;
     *)
-        echo "Invalid -s option argument ${TEST_SUITE}" >&2
+        echo "Invalid -d option argument ${DBMS}" >&2
         echo >&2
         echo "${HELP}" >&2
         exit 1
+        ;;
+    esac
+    docker compose down
+    ;;
+lint)
+    setUpDockerComposeDotEnv
+    docker compose run lint
+    SUITE_EXIT_CODE=$?
+    docker compose down
+    ;;
+update)
+    # pull typo3/core-testing-*:latest versions of those ones that exist locally
+    docker images ${IMAGE_PREFIX}core-testing-*:latest --format "{{.Repository}}:latest" | xargs -I {} docker pull {}
+    # remove "dangling" typo3/core-testing-* images (those tagged as <none>)
+    docker images ${IMAGE_PREFIX}core-testing-* --filter "dangling=true" --format "{{.ID}}" | xargs -I {} docker rmi {}
+    ;;
+*)
+    echo "Invalid -s option argument ${TEST_SUITE}" >&2
+    echo >&2
+    echo "${HELP}" >&2
+    exit 1
+    ;;
 esac
 
 exit $SUITE_EXIT_CODE
