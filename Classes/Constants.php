@@ -14,7 +14,7 @@ abstract class Constants
     /**
      * Provider/extension version
      */
-    public const PROVIDER_VERSION = '0.1.0';
+    public const PROVIDER_VERSION = '0.4.2';
 
     /**
      * Provider/extension name
