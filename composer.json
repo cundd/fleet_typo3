@@ -7,9 +7,13 @@
         "fleet",
         "service"
     ],
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": "~5.6 || ^7.0 || ^8.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "typo3/cms-core": "^10.4 || ^11.5"
     },
     "homepage": "https://github.com/cundd/fleet_master/",
     "authors": [
