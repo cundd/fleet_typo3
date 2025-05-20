@@ -27,14 +27,14 @@ class InfoCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $allInformation = $this->allInformationService->getInformation();
-        $key = $input->getOption('key');
+        $key = (string) $input->getOption('key');
         if ($key) {
             $information = ArrayUtility::getValueByPath($allInformation, $key, '.');
         } else {
             $information = $allInformation;
         }
 
-        $output->write(json_encode($information, JSON_PRETTY_PRINT));
+        $output->write((string) json_encode($information, JSON_PRETTY_PRINT));
 
         return self::SUCCESS;
     }

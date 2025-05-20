@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Cundd\Fleet\Info;
 
-use TYPO3\CMS\Core\Package\Package;
 use TYPO3\CMS\Core\Package\PackageInterface;
 use TYPO3\CMS\Core\Package\PackageManager;
 
 /**
  * Service to fetch extension information
  *
- * @phpstan-type PackageInformation array{key:string, version:string, description:string, state:'active'|'inactive'}
- * @phpstan-type PackagesInformation array{active:array<string,PackageInformation>, inactive:array<string,PackageInformation>, all:array<string,PackageInformation>}
+ * @phpstan-type PackageInformation array{key:string, version:string, description:string|null, state:'active'|'inactive'}
+ * @phpstan-type PackagesInformation array{active:PackageInformation[], inactive:PackageInformation[], all:PackageInformation[]}
  */
 class ExtensionService implements ServiceInterface
 {
@@ -36,42 +35,44 @@ class ExtensionService implements ServiceInterface
     }
 
     /**
-     * @return array<string,PackageInformation>
+     * @return PackageInformation[]
      */
     public function getAllPackages(): array
     {
-        return array_map([$this, 'getPackageData'], $this->loadAllAvailablePackages());
+        return array_map($this->getPackageData(...), $this->loadAllAvailablePackages());
     }
 
     /**
-     * @return array<string,PackageInformation>
+     * @return PackageInformation[]
      */
     public function getActivePackages(): array
     {
-        return array_map([$this, 'getPackageDataStateActive'], $this->loadActivePackages());
+        return array_map($this->getPackageDataStateActive(...), $this->loadActivePackages());
     }
 
     /**
-     * @return array<string,PackageInformation>
+     * @return PackageInformation[]
      */
     public function getInactivePackages(): array
     {
         $inactivePackages = array_diff_key($this->loadAllAvailablePackages(), $this->loadActivePackages());
 
-        return array_map([$this, 'getPackageDataStateInactive'], $inactivePackages);
+        return array_map($this->getPackageDataStateInactive(...), $inactivePackages);
     }
 
     /**
      * @param string $state Either self::STATE_ACTIVE, self::STATE_INACTIVE, or an empty string
      *
+     * @phpstan-param 'active'|'inactive' $state
+     *
      * @return PackageInformation
      */
-    private function getPackageData(Package $package, string $state = ''): array
+    private function getPackageData(PackageInterface $package, ?string $state = null): array
     {
         $meta = $package->getPackageMetaData();
         $packageKey = $meta->getPackageKey();
 
-        if (!$state) {
+        if (null === $state) {
             $state = $this->packageManager->isPackageActive($packageKey) ? self::STATE_ACTIVE : self::STATE_INACTIVE;
         }
 
@@ -86,7 +87,7 @@ class ExtensionService implements ServiceInterface
     /**
      * @return PackageInformation
      */
-    private function getPackageDataStateActive(Package $package): array
+    private function getPackageDataStateActive(PackageInterface $package): array
     {
         return $this->getPackageData($package, self::STATE_ACTIVE);
     }
@@ -94,7 +95,7 @@ class ExtensionService implements ServiceInterface
     /**
      * @return PackageInformation
      */
-    private function getPackageDataStateInactive(Package $package): array
+    private function getPackageDataStateInactive(PackageInterface $package): array
     {
         return $this->getPackageData($package, self::STATE_INACTIVE);
     }
